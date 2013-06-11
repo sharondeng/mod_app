@@ -1,0 +1,103 @@
+<script src="http://maps.googleapis.com/maps/api/js?client=gme-transtechconsulting&sensor=false&v=3.7"
+        type="text/javascript"></script>
+
+<script type="text/javascript">
+    var map;
+    var geocoder;
+    $(function()
+    {
+        var myOptions = {
+            center: new google.maps.LatLng(-34.397, 150.644),
+            zoom: 8,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById('map'), myOptions);
+
+         geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode(
+                {
+                    address: "933 Toorak Road, Camberwell, Victoria, Australia"
+                }, function(gresult, status)
+                {
+                    if(gresult && gresult.length)
+                        map.setCenter(gresult[0].geometry.location);
+                }
+        );
+    });
+        function codeAddress(param) {
+            alert(param);
+            var address = document.getElementById("address").value;
+
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        }
+
+    function replace() {
+
+        var obj = document.getElementById("first").innerHTML;
+
+        alert(obj);
+
+        $("#first").replaceText(/\btest\b/gi, 'TEST', true);
+
+        obj = document.getElementById("first").innerHTML;
+
+        alert(obj);
+//        $('#test *').replaceText( /\btext\b/gi, 'TEXT' );
+    }
+
+
+</script>
+<h1>Listing companies</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <div>
+    <input id="address" type="textbox" value="933 Toorak Road, Camberwell, Victoria, Australia">
+    <div id="first">
+    <input type="button" value="Encode" onclick="codeAddress()">
+      <p>this is a test on replacement </p>
+    </div>
+    <input type="button" value="Replace" onclick="replace()">
+  </div>
+  <% @companies.each do |company| %>
+      <tr>
+        <td><%= company.name %></td>
+        <td><%= link_to 'Show', company %></td>
+        <td><%= link_to 'Edit', edit_company_path(company) %></td>
+        <td><%= link_to 'Destroy', company, confirm: 'Are you sure?', method: :delete %></td>
+      </tr>
+  <% end %>
+</table>
+
+<style type="text/css" media="screen">
+    #map { float:left; width:500px; height:300px; }
+</style>
+<body>
+<div id="map" class="map">
+
+</div>
+</body>
+<br />
+
+<%= link_to 'New Company', new_company_path %>
+
+
+
+

@@ -1,0 +1,49 @@
+
+<%= form_for(@company) do |f| %>
+    <% if @company.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@company.errors.count, "error") %> prohibited this company from being saved:</h2>
+
+          <ul>
+            <% @company.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <button id="select_map">Select Map</button>
+
+    <div class="field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name %>
+    </div>
+
+    <style type="text/css">
+        .location {
+            height:170px;
+            width:300px;
+            padding:1em;
+            /*border-color:inherit;*/
+            border-style:solid;
+            border-width:1px;
+            /*float:left;*/
+            overflow: auto;
+        }
+    </style>
+
+
+
+
+    <div class="location">
+
+      <%= f.fields_for :locations do |builder| %>
+          <%= render "location_fields", :f => builder %>
+          <% end %>
+      <p><%= link_to_add_fields "Add Location", f, :locations %></p>
+
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>
